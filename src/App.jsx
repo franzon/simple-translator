@@ -29,8 +29,7 @@ function App() {
         q: text,
       });
 
-      // Created a proxy server to avoid CORS problem.
-      const result = await fetch(`http://68.183.139.12:7777/translate?${queryParams}`,
+      const result = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`https://translate.google.com/translate_a/single?client=at&dt=t&dt=ld&dt=qca&dt=rm&dt=bd&dj=1&hl=%25s&ie=UTF-8&oe=UTF-8&inputm=2&otf=2&iid=1dd3b944-fa62-4b55-b330-74909a99969e&${queryParams}`)}`,
         {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -38,9 +37,12 @@ function App() {
           },
         });
 
-      const { text: translated } = await result.json();
+      const { contents } = await result.json();
 
-      setTranslatedText(translated);
+      const { sentences } = JSON.parse(contents);
+      const { trans } = sentences[0];
+
+      setTranslatedText(trans);
     } catch (error) {
       setTranslatedText('Error translating text.');
     } finally {
